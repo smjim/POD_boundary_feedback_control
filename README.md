@@ -1,2 +1,5 @@
-# POD_boundary_feedback_control
-Math 518 Team D - Exploring Boundary Feedback Control Using Proper Orthogonal Decomposition
+# Exploring Boundary Feedback Control Using Proper Orthogonal Decomposition
+
+Math 518 - Math in Industry: Team D
+
+This project will focus on developing a reduced-order modeling (ROM) framework using Proper Orthogonal Decomposition (POD) to implement boundary feedback control for the 1D heat equation. The benchmark case will demonstrate how POD-based models can be used to reduce computational complexity and enable feedback control in a simplified system. The core steps will involve discretizing the spatial and time domains using different numerical methods (such as Runge-Kutta 4th order and Euler schemes), running simulations without control, and then applying POD to extract dominant modes from simulation snapshots. A feedback control law will be implemented to adjust boundary conditions dynamically, showing the effectiveness of control in real-time. Finally, visualization of the system's evolution and the impact of control will provide insights into the method's efficiency. Time permitting, the study will also compare various discretization techniques to evaluate the performance of the control strategies.
