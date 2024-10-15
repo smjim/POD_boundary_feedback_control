@@ -27,12 +27,18 @@ class HeatEquationSolver1D:
 		self.u = np.zeros(nx)  # Initialize temperature field
 		self.x = np.linspace(0, L, nx)  # Spatial grid points
 		
-		# Initial condition:
+		# Initial conditions:
 
+		# Multi-Modal sinusoidal
+		A1, A2, A3 = 1.0, 0.5, 0.3	# Component amplitudes
+		L1, L2, L3 = L/4, L/8, L/12 # Component wavelengths
+		self.u[:] = (A1 * np.sin(2 * np.pi * self.x / L1) +
+              A2 * np.sin(2 * np.pi * self.x / L2) +
+              A3 * np.sin(2 * np.pi * self.x / L3))
 		# Gaussian profile
 		#self.u[:] = np.exp(-10 * (self.x - L / 2)**2)
 		# Linear profile
-		self.u[:] = 2 * (self.x - L / 2)
+		#self.u[:] = 2 * (self.x - L / 2)
 		# Constant profile
 		#self.u[:] = 2 
 	
@@ -112,7 +118,7 @@ solver_euler.run_simulation()
 solver_euler.plot_solution()
 
 # Run simulation with RK4 method
-#solver_rk4 = HeatEquationSolver1D(nx, nt_snapshots, L, T, alpha, method='RK4', nt=nt)
-#solver_rk4.run_simulation()
-#solver_rk4.plot_solution()
+solver_rk4 = HeatEquationSolver1D(nx, nt_snapshots, L, T, alpha, method='RK4', nt=nt)
+solver_rk4.run_simulation()
+solver_rk4.plot_solution()
 
