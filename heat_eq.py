@@ -27,8 +27,14 @@ class HeatEquationSolver1D:
 		self.u = np.zeros(nx)  # Initialize temperature field
 		self.x = np.linspace(0, L, nx)  # Spatial grid points
 		
-		# Initial condition: Gaussian profile
-		self.u[:] = np.exp(-10 * (self.x - L / 2)**2)
+		# Initial condition:
+
+		# Gaussian profile
+		#self.u[:] = np.exp(-10 * (self.x - L / 2)**2)
+		# Linear profile
+		self.u[:] = 2 * (self.x - L / 2)
+		# Constant profile
+		#self.u[:] = 2 
 	
 	def euler_step(self):
 		"""Euler method for time-stepping."""
@@ -95,9 +101,9 @@ class HeatEquationSolver1D:
 # Parameters for the simulation
 nx = 100		 	# Number of spatial points
 L = 1.0			  	# Length of the rod
-T = 0.1			  	# Total time for simulation
+T = 1.0			  	# Total time for simulation
 alpha = 0.01	 	# Thermal diffusivity
-nt = 50000		 	# Number of time steps
+nt = int(5e4)	 	# Number of time steps
 nt_snapshots = 50	# Number of POD-analyzable snapshots
 
 # Run simulation with Euler method
@@ -106,7 +112,7 @@ solver_euler.run_simulation()
 solver_euler.plot_solution()
 
 # Run simulation with RK4 method
-solver_rk4 = HeatEquationSolver1D(nx, nt_snapshots, L, T, alpha, method='RK4', nt=nt)
-solver_rk4.run_simulation()
-solver_rk4.plot_solution()
+#solver_rk4 = HeatEquationSolver1D(nx, nt_snapshots, L, T, alpha, method='RK4', nt=nt)
+#solver_rk4.run_simulation()
+#solver_rk4.plot_solution()
 
