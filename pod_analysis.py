@@ -2,6 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import svd
 
+from matplotlib import rc
+
+# Font settings
+fontsize = 14
+
+font = {'family' : 'sans-serif',
+        'weight' : 'normal',
+        'size'   : fontsize}
+
+rc('font', **font)
+
 class PODAnalysis:
 	def __init__(self, snapshots):
 		"""
@@ -41,9 +52,9 @@ class PODAnalysis:
 		for i in range(min(num_modes, self.modes.shape[1])):
 			plt.plot(self.modes[:, i], label=f'Mode {i+1}')
 		
-		plt.title(f'First {num_modes} POD Modes')
-		plt.xlabel('Spatial Grid Points')
-		plt.ylabel('Mode Amplitude')
+		plt.title(f'First {num_modes} POD Modes', weight='bold')
+		plt.xlabel('Spatial Grid Points', weight='bold')
+		plt.ylabel('Mode Amplitude', weight='bold')
 		plt.legend()
 		plt.grid(True)
 		plt.show()
@@ -54,9 +65,9 @@ class PODAnalysis:
 		"""
 		energy = (self.singular_values**2) / np.sum(self.singular_values**2)
 		plt.plot(np.cumsum(energy), 'o-', label='Cumulative Energy')
-		plt.title('Energy Distribution by POD Modes')
-		plt.xlabel('Mode Number')
-		plt.ylabel('Cumulative Energy')
+		plt.title('Energy Distribution by POD Modes', weight='bold')
+		plt.xlabel('Mode Number', weight='bold')
+		plt.ylabel('Cumulative Energy', weight='bold')
 		plt.grid(True)
 		plt.legend()
 		plt.show()
@@ -80,9 +91,9 @@ def plot_snapshots(snapshots, plot_individual_snapshots=True):
 	plt.figure(figsize=(8, 6))
 	plt.imshow(snapshots, aspect='auto', cmap='hot', extent=[0, 1, 0, 1], origin='lower')
 	plt.colorbar(label='Temperature')
-	plt.xlabel('Space (x)')
-	plt.ylabel('Time (normalized)')
-	plt.title('Evolution of the Heat Equation Snapshots')
+	plt.xlabel('Space (x)', weight='bold')
+	plt.ylabel('Time (normalized)', weight='bold')
+	plt.title('Evolution of the Heat Equation Snapshots', weight='bold')
 	plt.show()
 
 	# Optionally, plot individual snapshots
@@ -90,9 +101,9 @@ def plot_snapshots(snapshots, plot_individual_snapshots=True):
 		plt.figure(figsize=(10, 6))
 		for i in range(0, nt_snapshots, max(1, nt_snapshots // 10)):  # Plot 10 evenly spaced snapshots
 			plt.plot(x, snapshots[:, i], label=f'Snapshot {i}')
-		plt.xlabel('Space (x)')
-		plt.ylabel('Temperature')
-		plt.title('Snapshots of the Heat Equation Over Time')
+		plt.xlabel('Space (x)', weight='bold')
+		plt.ylabel('Temperature', weight='bold')
+		plt.title('Snapshots of the Heat Equation Over Time', weight='bold')
 		plt.legend(loc='upper right')
 		plt.show()
 
@@ -103,7 +114,8 @@ def plot_snapshots(snapshots, plot_individual_snapshots=True):
 if __name__ == "__main__":
 	# Load snapshots from heat_eq.py (spatial x time snapshots)
 	# For example, if snapshots were saved into a file 'snapshots.npy'
-	snapshots = np.load('snapshots.npy')  # Shape (nx, nt)
+	#snapshots = np.load('snapshots.npy')  # Shape (nx, nt)
+	snapshots = np.load('data/linear_ic_euler.npy')  # Shape (nx, nt)
 
 	# Plot snapshot evolution
 	plot_snapshots(snapshots)
