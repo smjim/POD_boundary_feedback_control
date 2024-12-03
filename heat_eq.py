@@ -30,15 +30,15 @@ class HeatEquationSolver1D:
 		# Initial conditions:
 
 		# Multi-Modal sinusoidal
-		A1, A2, A3 = 1.0, 0.5, 0.3	# Component amplitudes
-		L1, L2, L3 = L/4, L/8, L/12 # Component wavelengths
-		self.u[:] = (A1 * np.sin(2 * np.pi * self.x / L1) +
-              A2 * np.sin(2 * np.pi * self.x / L2) +
-              A3 * np.sin(2 * np.pi * self.x / L3))
+		#A1, A2, A3 = 1.0, 0.5, 0.3	# Component amplitudes
+		#L1, L2, L3 = L/4, L/8, L/12 # Component wavelengths
+		#self.u[:] = (A1 * np.sin(2 * np.pi * self.x / L1) +
+        #      A2 * np.sin(2 * np.pi * self.x / L2) +
+        #      A3 * np.sin(2 * np.pi * self.x / L3))
 		# Gaussian profile
 		#self.u[:] = np.exp(-10 * (self.x - L / 2)**2)
 		# Linear profile
-		#self.u[:] = 2 * (self.x - L / 2)
+		self.u[:] = 2 * (self.x - L / 2)
 		# Constant profile
 		#self.u[:] = 2 
 	
@@ -73,6 +73,26 @@ class HeatEquationSolver1D:
 		self.u[-1] = 0
 
 		self.u += self.dt / 6 * (k1 + 2*k2 + 2*k3 + k4)
+
+	def boundary_control_step(self, t):
+		"""Runge-Kutta 4th order method for time-stepping."""
+		def heat_rhs(u):
+			# Right-hand side of the heat equation
+			du_dt = np.zeros_like(u)
+			for i in range(1, self.nx - 1):
+				du_dt[i] = self.alpha * (u[i+1] - 2*u[i] + u[i-1]) / self.dx**2
+			return du_dt
+		
+		k1 = heat_rhs(self.u)
+		k2 = heat_rhs(self.u + 0.5 * self.dt * k1)
+		k3 = heat_rhs(self.u + 0.5 * self.dt * k2)
+		k4 = heat_rhs(self.u + self.dt * k3)
+		
+		# Boundary conditions
+		self.u[0] = 5 * np.sin(0.05 * t)
+		self.u[-1] = 0
+
+		self.u += self.dt / 6 * (k1 + 2*k2 + 2*k3 + k4)
 	
 	def run_simulation(self):
 		"""Run the simulation using the selected numerical method."""
@@ -86,6 +106,10 @@ class HeatEquationSolver1D:
 				self.euler_step()
 			elif self.method == 'RK4':
 				self.rk4_step()
+
+			elif self.method == 'boundary_control':
+				self.boundary_control_step(t)
+
 			if t % snapshot_interval == 0:
 				snapshots[:, t // snapshot_interval] = self.u
 				print(f'\tSimulation progress: {t} frames, {100*t/self.nt:.2f} % complete')
@@ -108,9 +132,15 @@ class HeatEquationSolver1D:
 nx = 100		 	# Number of spatial points
 L = 1.0			  	# Length of the rod
 T = 1.0			  	# Total time for simulation
-alpha = 0.01	 	# Thermal diffusivity
+alpha = 0.41	 	# Thermal diffusivity
+#alpha = 0.01	 	# Thermal diffusivity
 nt = int(5e4)	 	# Number of time steps
 nt_snapshots = 50	# Number of POD-analyzable snapshots
+
+# Run simulation with boundary control
+solver_boundary = HeatEquationSolver1D(nx, nt_snapshots, L, T, alpha, method='boundary_control', nt=nt)
+solver_boundary.run_simulation()
+solver_boundary.plot_solution()
 
 # Run simulation with Euler method
 solver_euler = HeatEquationSolver1D(nx, nt_snapshots, L, T, alpha, method='Euler', nt=nt)

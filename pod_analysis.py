@@ -114,8 +114,8 @@ def plot_snapshots(snapshots, plot_individual_snapshots=True):
 if __name__ == "__main__":
 	# Load snapshots from heat_eq.py (spatial x time snapshots)
 	# For example, if snapshots were saved into a file 'snapshots.npy'
-	#snapshots = np.load('snapshots.npy')  # Shape (nx, nt)
-	snapshots = np.load('data/linear_ic_euler.npy')  # Shape (nx, nt)
+	snapshots = np.load('snapshots.npy')  # Shape (nx, nt)
+	#snapshots = np.load('data/linear_ic_euler.npy')  # Shape (nx, nt)
 
 	# Plot snapshot evolution
 	plot_snapshots(snapshots)
